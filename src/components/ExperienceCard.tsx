@@ -15,11 +15,21 @@ export default function ExperienceCard({
   const href = `/experiences/${experience.slug}`
   const nextSession = experience.sessions[0]
 
+  const isSoldOut =
+    experience.sessions.length > 0 &&
+    experience.sessions.every(
+      (session) => session.capacity - session.booked <= 0,
+    )
+
   return (
     <article className="experience-card">
       <div className="card-image">
-        {/* Image link has the same destination as the text link below, so keyboard users skip it. */}
-        <Link href={href} className="card-image-link" tabIndex={-1} aria-hidden="true">
+        <Link
+          href={href}
+          className="card-image-link"
+          tabIndex={-1}
+          aria-hidden="true"
+        >
           <ExperiencePhoto
             experience={experience}
             priority={priority}
@@ -39,7 +49,11 @@ export default function ExperienceCard({
         <div className="detail-row">
           <span>
             <Icon name="calendar" size={16} />
-            {nextSession ? formatSessionShort(nextSession.startsAt) : 'No dates yet'}
+            {isSoldOut
+              ? 'Sold out'
+              : nextSession
+                ? formatSessionShort(nextSession.startsAt)
+                : 'No dates yet'}
           </span>
           <span>
             <Icon name="pin" size={16} />

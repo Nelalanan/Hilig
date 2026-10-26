@@ -1,3 +1,4 @@
+
 'use client'
 
 import Link from 'next/link'
@@ -5,6 +6,7 @@ import { useState, type FormEvent } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 export default function SignupPage() {
+  const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -16,6 +18,13 @@ export default function SignupPage() {
     event.preventDefault()
     setError('')
     setMessage('')
+
+    const trimmedName = fullName.trim()
+
+    if (!trimmedName) {
+      setError('Please enter your full name.')
+      return
+    }
 
     if (password.length < 8) {
       setError('Your password must be at least 8 characters.')
@@ -33,9 +42,12 @@ export default function SignupPage() {
       const supabase = createClient()
 
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: email.trim(),
         password,
         options: {
+          data: {
+            full_name: trimmedName,
+          },
           emailRedirectTo: `${window.location.origin}/auth/callback?next=/account`,
         },
       })
@@ -67,6 +79,18 @@ export default function SignupPage() {
       <p>Create an account to start exploring hobbies and experiences.</p>
 
       <form className="auth-form" onSubmit={handleSignup}>
+        <label htmlFor="full-name">Full name</label>
+        <input
+          id="full-name"
+          type="text"
+          autoComplete="name"
+          value={fullName}
+          onChange={(event) => setFullName(event.target.value)}
+          placeholder="Your full name"
+          maxLength={100}
+          required
+        />
+
         <label htmlFor="email">Email address</label>
         <input
           id="email"

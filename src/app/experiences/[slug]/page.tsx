@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import ExperiencePhoto from '@/components/ExperiencePhoto'
+import BookingForm from '@/components/BookingForm'
 import Icon from '@/components/Icon'
 import { getAllSlugs, getExperienceBySlug } from '@/lib/data'
 import {
@@ -135,28 +136,12 @@ export default async function ExperienceDetailPage({ params }: Props) {
               )}
             </section>
           </div>
-
-          <aside className="booking-card" aria-label="Booking">
-            <p className="booking-price">
-              {formatPrice(experience.pricePhp)} <small>/ person</small>
-            </p>
-
-            <div className="booking-next">
-              <span>Next session</span>
-              {next ? (
-                <b>
-                  {next.day} · {next.time}
-                </b>
-              ) : (
-                <b>No upcoming dates</b>
-              )}
-            </div>
-
-            <button type="button" className="button button-dark" disabled>
-              Booking opens soon
-            </button>
-            <p className="booking-note">Online booking is being set up. You won’t be charged.</p>
-          </aside>
+            <aside className="booking-panel">
+              <BookingForm
+              sessions={experience.sessions}
+              pricePhp={experience.pricePhp}
+              />
+        </aside>
         </div>
       </div>
     </div>

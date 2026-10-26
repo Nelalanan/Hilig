@@ -146,9 +146,9 @@ export default async function HomePage() {
             inspiration going between sessions.
           </p>
 
-          <a className="button button-gold" href="#">
-            Explore communities <Icon name="arrow" size={18} />
-          </a>
+          <span className="button button-gold" aria-label="Community feature coming soon">
+          Communities coming soon
+          </span>
         </div>
 
         <div className="group-stack">

@@ -133,7 +133,16 @@ export async function getExperienceBySlug(slug: string): Promise<Experience | nu
 
 export async function getFeaturedExperiences(limit = 3): Promise<Experience[]> {
   const all = await loadAll()
-  return sortExperiences(all, 'soonest').slice(0, limit)
+
+  const available = all.filter((experience) =>
+    experience.sessions.some(
+      (session) =>
+        session.capacity - session.booked > 0 &&
+        Date.parse(session.startsAt) > Date.now(),
+    ),
+  )
+
+  return sortExperiences(available, 'soonest').slice(0, limit)
 }
 
 export async function getAllSlugs(): Promise<string[]> {

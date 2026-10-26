@@ -1299,20 +1299,26 @@ footer > small {
   color: #9b2c2c;
 }
 
+
 .booking-card {
+  box-sizing: border-box;
   position: sticky;
   top: 24px;
+  width: 100%;
+  min-width: 0;
   padding: 26px;
   background: white;
   border: 1px solid #e2e0d7;
-  border-radius: 16px;
+  border-radius: 20px;
   box-shadow: 0 15px 35px rgba(23, 75, 69, 0.08);
 }
 
 .booking-price {
-  margin-bottom: 0;
+  margin: 0 0 18px;
   font: 600 34px var(--serif);
+  line-height: 1.2;
   color: var(--teal);
+  overflow-wrap: anywhere;
 }
 
 .booking-price small {
@@ -1320,31 +1326,71 @@ footer > small {
   color: #75817f;
 }
 
+.booking-card .auth-form {
+  display: grid;
+  gap: 10px;
+}
+
+.booking-card .auth-form label {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--teal);
+}
+
+.booking-card select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #e2e0d7;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--teal);
+  font: 400 14px var(--sans);
+}
+
 .booking-next {
-  margin: 18px 0 20px;
+  margin: 18px 0;
   padding: 14px 0;
   border-top: 1px solid #ece9df;
   border-bottom: 1px solid #ece9df;
   font-size: 14px;
+  overflow-wrap: anywhere;
 }
 
 .booking-next span {
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   font-size: 12px;
   color: #75817f;
 }
 
+.booking-next b {
+  line-height: 1.5;
+}
+
 .booking-card .button {
+  box-sizing: border-box;
+  display: block;
   width: 100%;
+  margin-top: 18px;
 }
 
 .booking-note {
   margin: 12px 0 0;
   font-size: 12px;
+  line-height: 1.6;
   text-align: center;
   color: #75817f;
 }
+
+@media (max-width: 768px) {
+  .booking-card {
+    position: static;
+    padding: 22px;
+  }
+}
+
 
 /* Simple centred message pages (404, login placeholder) */
 
@@ -1463,4 +1509,60 @@ footer > small {
   justify-content: center;
   gap: 1rem;
   margin-top: 1.5rem;
+}
+
+
+.account-profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem auto;
+  text-align: left;
+  flex-wrap: wrap;
+}
+
+.account-profile h2 {
+  margin: 0 0 0.35rem;
+}
+
+.account-profile p {
+  margin: 0.25rem 0;
+  overflow-wrap: anywhere;
+}
+
+.account-avatar,
+.account-avatar-placeholder {
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.account-avatar {
+  object-fit: cover;
+}
+
+.account-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #dceee9;
+  color: #176b61;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.account-role {
+  text-transform: capitalize;
+  opacity: 0.75;
+  font-size: 0.9rem;
+}
+
+
+.settings-help {
+  margin: -0.35rem 0 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  opacity: 0.75;
 }

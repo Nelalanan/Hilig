@@ -30,7 +30,17 @@ export default function LoginPage() {
         return
       }
 
-      router.replace('/account')
+      const params = new URLSearchParams(window.location.search)
+      const requestedNext = params.get('next')
+
+      const next =
+      requestedNext?.startsWith('/') &&
+      !requestedNext.startsWith('//') &&
+      !requestedNext.startsWith('/\\')
+      ? requestedNext
+      : '/account'
+
+      router.replace(next)
       router.refresh()
     } catch {
       setError('Unable to sign in. Please check your Supabase configuration.')
