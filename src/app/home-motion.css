@@ -1,0 +1,311 @@
+/* ==========================================================================
+   Homepage motion & polish
+   Additive only: imported by src/app/page.tsx, so it never affects other
+   pages and nothing in globals.css needs to change.
+   ========================================================================== */
+
+/* ---- Hobby ticker (scrolling strip under the hero) ---------------------- */
+
+.hobby-ticker {
+  overflow: hidden;
+  background: var(--gold);
+  color: var(--teal);
+}
+
+.hobby-ticker-track {
+  display: flex;
+  width: max-content;
+}
+
+.hobby-ticker ul {
+  display: flex;
+  flex: none;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hobby-ticker li {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  padding: 17px 26px 17px 0;
+  font: italic 600 clamp(22px, 2.6vw, 34px) / 1 var(--serif);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.hobby-ticker li::after {
+  content: '✦';
+  font: 400 0.55em var(--sans);
+}
+
+/* ---- How it works -------------------------------------------------------- */
+
+.how-section {
+  padding: 86px 7%;
+  background: var(--cream);
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 1210px;
+  margin: auto;
+}
+
+.step-card {
+  padding: 28px 24px 30px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(10, 69, 69, 0.12);
+  border-radius: 14px;
+  transition:
+    transform 0.25s,
+    background 0.25s,
+    box-shadow 0.25s;
+}
+
+.step-card:hover {
+  background: #fff;
+  box-shadow: 0 15px 35px rgba(23, 75, 69, 0.08);
+  transform: translateY(-5px);
+}
+
+.step-number {
+  display: block;
+  margin-bottom: 18px;
+  font: italic 600 64px / 1 var(--serif);
+  letter-spacing: -0.04em;
+  color: #d6a02a;
+  transition: translate 0.3s;
+}
+
+.step-card:hover .step-number {
+  translate: 6px 0;
+}
+
+.step-card h3 {
+  margin: 0 0 8px;
+  font: 600 22px / 1.2 var(--serif);
+  color: var(--teal);
+}
+
+.step-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #586d69;
+}
+
+/* ---- Small interactions (safe for every visitor) ------------------------ */
+
+.search-box {
+  transition: box-shadow 0.25s;
+}
+
+.search-box:focus-within {
+  box-shadow:
+    0 0 0 4px rgba(236, 185, 59, 0.5),
+    0 15px 30px rgba(0, 0, 0, 0.13);
+}
+
+.search-submit {
+  transition:
+    transform 0.2s,
+    filter 0.2s;
+}
+
+.search-submit:hover {
+  filter: brightness(1.05);
+  transform: scale(1.05);
+}
+
+.category-card span {
+  transition:
+    rotate 0.3s,
+    scale 0.3s,
+    background 0.2s;
+}
+
+.category-card:hover span {
+  background: var(--gold);
+  rotate: -12deg;
+  scale: 1.12;
+}
+
+.section-heading > a svg,
+.host-copy .button svg,
+.community-copy .button svg {
+  transition: translate 0.2s;
+}
+
+.section-heading > a:hover svg,
+.host-copy .button:hover svg,
+.community-copy .button:hover svg {
+  translate: 4px 0;
+}
+
+.group-card {
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.group-stack:hover .group-card.rotate-left {
+  transform: rotate(-11deg) translateX(-14px);
+}
+
+.group-stack:hover .group-card.rotate-right {
+  transform: rotate(9deg) translateX(14px);
+}
+
+.host-image span {
+  transition: transform 0.3s;
+}
+
+.host-image:hover span {
+  transform: rotate(1deg) translateY(-3px);
+}
+
+/* ---- Animation (skipped entirely when the visitor prefers less motion) -- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes reveal-rise {
+    from {
+      opacity: 0;
+      translate: 0 28px;
+    }
+  }
+
+  @keyframes float-soft {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    50% {
+      translate: 0 -8px;
+    }
+  }
+
+  @keyframes wobble {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    50% {
+      translate: 0 6px;
+    }
+  }
+
+  @keyframes hero-zoom {
+    from {
+      scale: 1.1;
+    }
+  }
+
+  @keyframes ticker-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Hero: copy rises in one line at a time, the photo settles, cards drift */
+  .hero-copy > * {
+    animation: reveal-rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  }
+  .hero-copy > :nth-child(2) {
+    animation-delay: 0.08s;
+  }
+  .hero-copy > :nth-child(3) {
+    animation-delay: 0.16s;
+  }
+  .hero-copy > :nth-child(4) {
+    animation-delay: 0.24s;
+  }
+  .hero-copy > :nth-child(5) {
+    animation-delay: 0.32s;
+  }
+
+  .hero-visual > img {
+    animation: hero-zoom 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  }
+
+  .floating-card {
+    animation: float-soft 5s ease-in-out infinite;
+  }
+
+  .scribble {
+    animation: wobble 4s ease-in-out infinite;
+  }
+
+  /* Ticker */
+  .hobby-ticker-track {
+    animation: ticker-scroll 40s linear infinite;
+  }
+
+  .hobby-ticker:hover .hobby-ticker-track {
+    animation-play-state: paused;
+  }
+
+  /* Scroll reveal (class names come from src/components/Reveal.tsx).
+     Using `translate` + a "from" keyframe only means each element finishes on
+     its own normal styles, so hover effects and rotated cards keep working. */
+  .reveal-hidden:not(.reveal-stagger) {
+    opacity: 0;
+  }
+
+  .reveal-shown:not(.reveal-stagger) {
+    animation: reveal-rise 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+    animation-delay: var(--reveal-delay, 0ms);
+  }
+
+  .reveal-stagger.reveal-hidden > * {
+    opacity: 0;
+  }
+
+  .reveal-stagger.reveal-shown > * {
+    animation: reveal-rise 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+    animation-delay: var(--reveal-delay, 0ms);
+  }
+  .reveal-stagger.reveal-shown > :nth-child(2) {
+    animation-delay: calc(var(--reveal-delay, 0ms) + 90ms);
+  }
+  .reveal-stagger.reveal-shown > :nth-child(3) {
+    animation-delay: calc(var(--reveal-delay, 0ms) + 180ms);
+  }
+  .reveal-stagger.reveal-shown > :nth-child(4) {
+    animation-delay: calc(var(--reveal-delay, 0ms) + 270ms);
+  }
+  .reveal-stagger.reveal-shown > :nth-child(5) {
+    animation-delay: calc(var(--reveal-delay, 0ms) + 360ms);
+  }
+  .reveal-stagger.reveal-shown > :nth-child(6) {
+    animation-delay: calc(var(--reveal-delay, 0ms) + 450ms);
+  }
+}
+
+/* ---- Responsive ---------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .steps-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .how-section {
+    padding: 65px 5%;
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .step-number {
+    font-size: 52px;
+  }
+
+  .hobby-ticker li {
+    padding-block: 14px;
+  }
+}

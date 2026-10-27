@@ -1,13 +1,16 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import Link from 'next/link'
 import type { Session } from '@/lib/types'
 
 type Props = {
   sessions: Session[]
   pricePhp: number
+  onlinePaymentEnabled?: boolean
+  cashPaymentEnabled?: boolean
+  cashPaymentInstructions?: string | null
 }
 
 function formatDate(startsAt: string) {
@@ -36,7 +39,7 @@ function money(amount: number) {
   }).format(amount)
 }
 
-export default function BookingForm({ sessions, pricePhp }: Props) {
+export default function BookingForm({ sessions, pricePhp, onlinePaymentEnabled = true, cashPaymentEnabled = false, cashPaymentInstructions }: Props) {
   // Sessions passed by the data layer contain upcoming dates only.
   const upcomingSessions = sessions.filter(
     (session) => Date.parse(session.startsAt) > Date.now(),
@@ -50,8 +53,11 @@ export default function BookingForm({ sessions, pricePhp }: Props) {
     availableSessions[0]?.id ?? '',
   )
   const [quantity, setQuantity] = useState(1)
+  const [paymentMethod, setPaymentMethod] = useState<'online' | 'cash'>(onlinePaymentEnabled ? 'online' : 'cash')
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  // Reuse the same key after network failures so retries cannot reserve seats twice.
+  const idempotencyKeyRef = useRef<string | null>(null)
 
   const selectedSession = availableSessions.find(
     (session) => session.id === sessionId,
@@ -75,6 +81,9 @@ export default function BookingForm({ sessions, pricePhp }: Props) {
 
     setError('')
     setSubmitting(true)
+    if (!idempotencyKeyRef.current) {
+      idempotencyKeyRef.current = crypto.randomUUID()
+    }
 
     try {
       const response = await fetch('/api/bookings', {
@@ -83,6 +92,8 @@ export default function BookingForm({ sessions, pricePhp }: Props) {
         body: JSON.stringify({
           sessionId,
           quantity: safeQuantity,
+          idempotencyKey: idempotencyKeyRef.current,
+          paymentMethod,
         }),
       })
 
@@ -104,9 +115,16 @@ export default function BookingForm({ sessions, pricePhp }: Props) {
         return
       }
 
-      window.location.assign(
-        `/bookings/${encodeURIComponent(result.bookingId)}`,
-      )
+      if (typeof result.redirectUrl === 'string') {
+        window.location.assign(result.redirectUrl)
+        return
+      }
+      if (typeof result.checkoutUrl !== 'string') {
+        setError(result.error ?? 'Checkout could not be opened. Please try again.')
+        return
+      }
+
+      window.location.assign(result.checkoutUrl)
     } catch {
       setError('Unable to connect. Please try again.')
     } finally {
@@ -175,6 +193,7 @@ export default function BookingForm({ sessions, pricePhp }: Props) {
           value={sessionId}
           onChange={(event) => {
             setSessionId(event.target.value)
+            idempotencyKeyRef.current = null
             setQuantity(1)
             setError('')
           }}
@@ -194,6 +213,7 @@ export default function BookingForm({ sessions, pricePhp }: Props) {
           value={safeQuantity}
           onChange={(event) => {
             setQuantity(Number(event.target.value))
+            idempotencyKeyRef.current = null
             setError('')
           }}
           disabled={submitting || !selectedSession}
@@ -231,19 +251,38 @@ export default function BookingForm({ sessions, pricePhp }: Props) {
         </p>
       )}
 
+      {pricePhp > 0 && (onlinePaymentEnabled || cashPaymentEnabled) && (
+        <fieldset className="auth-form" style={{ border: 0, padding: 0, margin: '1rem 0' }}>
+          <legend><strong>Payment method</strong></legend>
+          {onlinePaymentEnabled && (
+            <label className="form-option">
+              <input type="radio" name="paymentMethod" value="online" checked={paymentMethod === 'online'} onChange={() => setPaymentMethod('online')} />
+              <span><strong>Pay online</strong><small>Secure checkout through Hilig.</small></span>
+            </label>
+          )}
+          {cashPaymentEnabled && (
+            <label className="form-option">
+              <input type="radio" name="paymentMethod" value="cash" checked={paymentMethod === 'cash'} onChange={() => setPaymentMethod('cash')} />
+              <span><strong>Pay in person</strong><small>{cashPaymentInstructions || 'Reserve your spot now and pay the host in person.'}</small></span>
+            </label>
+          )}
+        </fieldset>
+      )}
+      {pricePhp === 0 && <p className="booking-note">Free reservation — no payment is required.</p>}
+
       <button
         type="button"
         className="button button-dark"
         onClick={submitBooking}
         disabled={!selectedSession || submitting}
       >
-        {submitting ? 'Creating booking…' : 'Book this experience'}
+        {submitting ? 'Confirming booking…' : pricePhp === 0 ? 'Reserve for free' : paymentMethod === 'cash' ? 'Reserve and pay in person' : 'Continue to payment'}
       </button>
 
-      <p className="booking-note">
-        No payment is collected at this stage. Your booking will be marked
-        pending.
-      </p>
+        <p className="booking-note">
+        Your seats will be reserved while your booking is pending.
+        Complete payment through PayMongo to confirm your booking.
+        </p>
 
       <p className="booking-note">
         Need an account? <Link href="/login">Sign in</Link> to continue.

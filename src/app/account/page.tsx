@@ -37,13 +37,14 @@ export default async function AccountPage() {
   const role = profile?.role
 
   return (
-    <section className="page-message">
-      <p className="eyebrow">YOUR HILIG ACCOUNT</p>
+    <section className="account-hub page-message">
+      <p className="eyebrow">YOUR SPACE • YOUR EXPERIENCES</p>
       <h1 className="page-title">
         {fullName ? `Welcome, ${fullName}!` : 'Welcome to Hilig!'}
       </h1>
 
-      <div className="account-profile">
+      <div className="account-dashboard-grid">
+      <div className="account-profile account-profile-card">
         {avatarUrl ? (
           <Image
             src={avatarUrl}
@@ -61,21 +62,22 @@ export default async function AccountPage() {
           </div>
         )}
 
-        <div>
+        <div className="account-profile-copy">
           <h2>{fullName || 'Complete your profile'}</h2>
           <p>{data.user.email}</p>
           {role && <p className="account-role">{role}</p>}
+          {!fullName && (
+            <p className="account-profile-hint">
+              Your profile doesn&apos;t have a name yet. Add one in account settings.
+            </p>
+          )}
         </div>
       </div>
 
-      {!fullName && (
-        <p>
-          Your profile doesn't have a name yet. You can add one in your
-          account settings.
-        </p>
-      )}
-      
-      <div className="auth-actions">
+      <div className="auth-actions account-action-grid">
+        <Link className="button button-dark" href="/account/bookings">
+         My bookings
+        </Link>
         
        <Link className="button button-dark" href="/account/settings">
           Account settings
@@ -86,6 +88,11 @@ export default async function AccountPage() {
         </Link>
 
         <LogoutButton />
+      </div>
+      </div>
+      <div className="account-discovery-strip">
+        <div><span className="eyebrow">KEEP EXPLORING</span><h2>Make room for something new.</h2><p>Find a workshop, meet your people, or plan your next experience.</p></div>
+        <div className="account-discovery-links"><Link href="/events">Browse events ↗</Link><Link href="/community">Find communities ↗</Link></div>
       </div>
     </section>
   )

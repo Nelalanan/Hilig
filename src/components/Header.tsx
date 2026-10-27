@@ -1,33 +1,103 @@
- 'use client'
+
+'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Icon from './Icon'
+
+type UserRole = 'guest' | 'host' | 'admin' | null
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [isSignedIn, setIsSignedIn] = useState(false)
+  const [role, setRole] = useState<UserRole>(null)
 
   const closeMenu = () => setMenuOpen(false)
 
+  const loadUserState = useCallback(
+    async (userId: string | null, supabase: ReturnType<typeof createClient>) => {
+      if (!userId) {
+        setIsSignedIn(false)
+        setRole(null)
+        return
+      }
+
+      setIsSignedIn(true)
+
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .maybeSingle()
+
+      if (error) {
+        console.error('Could not load user profile role:', error.message)
+        setRole(null)
+        return
+      }
+
+      const userRole = profile?.role
+
+      setRole(
+        userRole === 'guest' ||
+          userRole === 'host' ||
+          userRole === 'admin'
+          ? userRole
+          : null,
+      )
+    },
+    [],
+  )
+
   useEffect(() => {
     const supabase = createClient()
+    let active = true
 
+    const syncUserState = async (userId: string | null) => {
+      if (!active) return
+      await loadUserState(userId, supabase)
+    }
+
+    // Load the current session on first render.
+    void supabase.auth.getUser().then(({ data, error }) => {
+      if (!active) return
+
+      if (error) {
+        // A signed-out visitor is a normal state.
+        if (error.name !== 'AuthSessionMissingError') {
+          console.error('Could not check authentication:', error.message)
+        }
+
+        void syncUserState(null)
+        return
+      }
+
+      void syncUserState(data.user?.id ?? null)
+    })
+
+    // Keep the header updated after login, logout, or token refresh.
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsSignedIn(!!session?.user)
+      void syncUserState(session?.user?.id ?? null)
     })
 
     return () => {
+      active = false
       subscription.unsubscribe()
     }
-  }, [])
+  }, [loadUserState])
 
   const accountHref = '/account'
   const authHref = isSignedIn ? accountHref : '/login'
   const authLabel = isSignedIn ? 'My Account' : 'Sign in'
+
+  const hostHref = !isSignedIn
+    ? '/login'
+    : role === 'host'
+      ? '/host/dashboard'
+      : '/become-a-host'
 
   return (
     <header className="site-header">
@@ -37,8 +107,7 @@ export default function Header() {
         aria-label="Hilig home"
         onClick={closeMenu}
       >
-        <span className="brand-mark">h</span>
-        <span>hilig.</span>
+        <img className="brand-logo-image" src="/hilig-logo.png" alt="Hilig — find what makes you come alive." />
       </Link>
 
       <nav
@@ -49,13 +118,38 @@ export default function Header() {
           Explore
         </Link>
 
-        <Link href="/#communities" onClick={closeMenu}>
+        <Link href="/events" onClick={closeMenu}>
+          Events
+        </Link>
+
+        <Link href="/community" onClick={closeMenu}>
           Communities
         </Link>
 
-        <Link href="/#partner" onClick={closeMenu}>
-          For hosts
+        {role !== 'host' && (
+          <Link href="/#partner" onClick={closeMenu}>
+            For hosts
+          </Link>
+        )}
+
+        <Link href="/partnerships" onClick={closeMenu}>
+          Partnerships
         </Link>
+
+        {isSignedIn && <Link href="/messages" onClick={closeMenu}>Messages</Link>}
+        {role === 'admin' && <Link href="/admin/submissions" onClick={closeMenu}>Admin inbox</Link>}
+
+        {role !== 'host' && (
+          <Link href={hostHref} onClick={closeMenu}>
+            Become a Host
+          </Link>
+        )}
+
+        {role === 'host' && (
+          <Link href="/host/dashboard" onClick={closeMenu}>
+            Host Dashboard
+          </Link>
+        )}
 
         <Link
           className="nav-signin"

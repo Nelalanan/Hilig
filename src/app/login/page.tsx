@@ -14,6 +14,10 @@ export default function LoginPage() {
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    console.log('[Hilig login] Form submitted', {
+     email,
+     page: window.location.href,
+    })
     setError('')
     setLoading(true)
 
@@ -23,6 +27,10 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
+      })
+      console.log('[Hilig login] Supabase response', {
+      success: !error,
+      error: error?.message ?? null,
       })
 
       if (error) {
@@ -93,7 +101,7 @@ export default function LoginPage() {
         </button>
       </form>
 
-      <p>
+      <p className="auth-switch">
         New to Hilig? <Link href="/signup">Create an account</Link>
       </p>
     </section>

@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ['guzzler-antsy-diffuser.ngrok-free.dev'],
   images: {
     // Remote hosts that next/image is allowed to optimise.
     remotePatterns: [
@@ -12,3 +13,4 @@ const nextConfig: NextConfig = {
 }
 
 export default nextConfig
+

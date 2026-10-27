@@ -32,10 +32,10 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
   const { q, category } = await readFilters(searchParams)
 
   return {
-    title: category ? `${category} experiences in Metro Manila` : 'Explore experiences',
+    title: category ? `${category} experiences` : 'Explore experiences',
     description: category
-      ? `Book small-group ${category.toLowerCase()} experiences hosted by locals in Metro Manila.`
-      : 'Browse hobby experiences hosted by locals in Metro Manila: pottery, painting, cooking, music and more.',
+      ? `Book small-group ${category.toLowerCase()} experiences hosted by locals.`
+      : 'Browse hobby experiences hosted by locals: pottery, painting, cooking, music and more.',
     // Every possible search phrase is its own URL; keep those out of Google.
     robots: q ? { index: false, follow: true } : undefined,
   }
@@ -66,7 +66,6 @@ export default async function ExperiencesPage({ searchParams }: { searchParams: 
     <>
       <section className="page-banner">
         <div className="page-banner-inner">
-          <p className="eyebrow light">METRO MANILA</p>
           <h1 className="page-title">{heading}</h1>
           <p className="hero-lead">
             {q ? (

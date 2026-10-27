@@ -14,19 +14,23 @@ type ExperienceRow = {
   description: string
   location: string
   price_php: number
+  online_payment_enabled?: boolean
+  cash_payment_enabled?: boolean
+  cash_payment_instructions?: string | null
   image_url: string | null
   duration_minutes: number
   includes: string[] | null
   rating_avg: number | string
   review_count: number
-  host: { name: string } | null
+  host: { id: string; name: string } | null
   sessions: { id: string; starts_at: string; capacity: number; booked: number }[] | null
 }
 
 const SELECT = `
   id, slug, title, category, tag, description, location, price_php, image_url,
+  online_payment_enabled, cash_payment_enabled, cash_payment_instructions,
   duration_minutes, includes, rating_avg, review_count,
-  host:hosts(name),
+  host:hosts(id, name),
   sessions(id, starts_at, capacity, booked)
 `
 
@@ -51,9 +55,13 @@ function mapRow(row: ExperienceRow): Experience | null {
     category,
     tag: row.tag,
     description: row.description,
+    hostId: row.host?.id ?? null,
     hostName: row.host?.name ?? 'Hilig host',
     location: row.location,
     pricePhp: row.price_php,
+    onlinePaymentEnabled: row.online_payment_enabled ?? true,
+    cashPaymentEnabled: row.cash_payment_enabled ?? false,
+    cashPaymentInstructions: row.cash_payment_instructions ?? null,
     imageUrl: row.image_url,
     durationMinutes: row.duration_minutes,
     includes: row.includes ?? [],
@@ -74,7 +82,7 @@ const loadAll = cache(async (): Promise<Experience[]> => {
   const supabase = getSupabase()
   if (!supabase) return seedExperiences()
 
-  const { data, error } = await supabase.from('experiences').select(SELECT).eq('is_published', true)
+  const { data, error } = await supabase.from('experiences').select(SELECT).eq('is_published', true).eq('approval_status', 'approved')
 
   if (error) {
     console.error('[hilig] Could not load experiences from Supabase:', error.message)

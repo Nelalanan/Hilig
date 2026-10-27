@@ -15,8 +15,12 @@ export type Experience = {
   tag: string | null
   description: string
   hostName: string
+  hostId: string | null
   location: string
   pricePhp: number // whole pesos. Multiply by 100 for PayMongo (it expects centavos).
+  onlinePaymentEnabled?: boolean
+  cashPaymentEnabled?: boolean
+  cashPaymentInstructions?: string | null
   imageUrl: string | null
   durationMinutes: number
   includes: string[]

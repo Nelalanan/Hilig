@@ -69,10 +69,20 @@ export default async function ExperienceDetailPage({ params }: Props) {
             <h1 className="detail-title">{experience.title}</h1>
 
             <div className="detail-meta">
-              <span>
-                <Icon name="users" size={17} />
-                Hosted by {experience.hostName}
-              </span>
+<span>
+  <Icon name="users" size={17} />
+  Hosted by{' '}
+  {experience.hostId ? (
+    <Link
+      href={`/hosts/${experience.hostId}`}
+      className="host-name-link"
+    >
+      {experience.hostName}
+    </Link>
+  ) : (
+    experience.hostName
+  )}
+</span>
               <span>
                 <Icon name="pin" size={17} />
                 {experience.location}
@@ -140,6 +150,9 @@ export default async function ExperienceDetailPage({ params }: Props) {
               <BookingForm
               sessions={experience.sessions}
               pricePhp={experience.pricePhp}
+              onlinePaymentEnabled={experience.onlinePaymentEnabled}
+              cashPaymentEnabled={experience.cashPaymentEnabled}
+              cashPaymentInstructions={experience.cashPaymentInstructions}
               />
         </aside>
         </div>

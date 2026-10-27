@@ -147,7 +147,7 @@ export default function SignupPage() {
         </button>
       </form>
 
-      <p>
+      <p className="auth-switch">
         Already have an account? <Link href="/login">Sign in</Link>
       </p>
     </section>

@@ -40,6 +40,7 @@ export function seedExperiences(): Experience[] {
       tag: 'Materials included',
       description:
         'Sit down at the wheel and learn to center, open and pull up a clay form in a relaxed small-group class. Our instructor walks you through each step, so nobody needs any experience. You will make two pieces to be trimmed, glazed and fired by the studio.',
+      hostId: null,
       hostName: 'Clay House Studio',
       location: 'Makati',
       pricePhp: 1250,
@@ -62,6 +63,7 @@ export function seedExperiences(): Experience[] {
       tag: 'Beginner friendly',
       description:
         'Mix, fold and shape your own loaf while learning how a sourdough starter actually works. You will leave with a loaf ready to bake, a jar of starter and a recipe card for practising at home.',
+      hostId: null,
       hostName: 'The Daily Knead',
       location: 'Quezon City',
       pricePhp: 980,
@@ -83,6 +85,7 @@ export function seedExperiences(): Experience[] {
       tag: 'No experience needed',
       description:
         'A calm evening of watercolour and plants. You will learn simple brush techniques for leaves and petals, then paint a small botanical piece to frame and keep. Paints, paper and brushes are all provided.',
+      hostId: null,
       hostName: 'Common Room',
       location: 'Pasig',
       pricePhp: 750,
@@ -104,6 +107,7 @@ export function seedExperiences(): Experience[] {
       tag: 'Instruments provided',
       description:
         'Learn four chords, then play along to a handful of easy songs with the whole group. No instrument and no experience needed. It is a loose, friendly evening aimed at people who have always wanted to try.',
+      hostId: null,
       hostName: 'Kanto Strings',
       location: 'Quezon City',
       pricePhp: 600,
@@ -125,6 +129,7 @@ export function seedExperiences(): Experience[] {
       tag: 'Small group',
       description:
         'An easy early-morning trail walk ending with a view over the city as the sun comes up. A local guide sets a gentle pace and points out plants and birds along the way. Suitable for first-time hikers.',
+      hostId: null,
       hostName: 'Trail Mix PH',
       location: 'Antipolo',
       pricePhp: 500,
@@ -146,6 +151,7 @@ export function seedExperiences(): Experience[] {
       tag: 'All levels',
       description:
         'A gentle one-hour flow focused on stretching, breathing and unwinding before the week starts. Mats and props are provided, and the teacher offers easier and harder options for every pose.',
+      hostId: null,
       hostName: 'Still Studio',
       location: 'Taguig',
       pricePhp: 700,

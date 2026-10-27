@@ -3,6 +3,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import CancelBookingButton from '@/components/CancelBookingButton'
+
 
 export const metadata: Metadata = {
   title: 'Booking confirmation',
@@ -84,7 +86,7 @@ export default async function BookingConfirmationPage({ params }: Props) {
       <p className="eyebrow">BOOKING RECEIVED</p>
       <h1 className="page-title">You're on your way!</h1>
       <p>
-        Your booking has been created. No payment has been collected.
+        Your booking details are shown below. Payment confirmation is updated only after Hilig receives a verified payment notification.
       </p>
 
       <div className="booking-card">
@@ -108,11 +110,14 @@ export default async function BookingConfirmationPage({ params }: Props) {
 
         <p><strong>Status</strong></p>
         <p>{booking.status === 'pending' ? 'Pending' : booking.status}</p>
+        {booking.status === 'pending' &&
+        new Date(session.starts_at).getTime() > Date.now() && (
+        <CancelBookingButton bookingId={booking.id} />
+        )}
       </div>
 
       <p>
-        Your booking is pending. Payment and any additional confirmation
-        steps will be added later.
+        A pending booking is not a confirmed payment. If you just returned from checkout, refresh this page in a moment while Hilig verifies the provider notification.
       </p>
 
       <Link
@@ -121,6 +126,9 @@ export default async function BookingConfirmationPage({ params }: Props) {
       >
         Back to experience
       </Link>
+      <p>
+      <Link href="/account/bookings">View all my bookings</Link>
+      </p>
 
       <p>
         <Link href="/experiences">Explore more experiences</Link>

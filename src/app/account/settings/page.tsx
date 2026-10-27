@@ -31,8 +31,8 @@ export default async function AccountSettingsPage() {
     console.error('Unable to load profile settings:', profileError.message)
 
     return (
-      <section className="page-message auth-page">
-        <p className="eyebrow">YOUR HILIG ACCOUNT</p>
+      <section className="account-settings-page page-message auth-page">
+        <p className="eyebrow">YOUR SPACE • YOUR DETAILS</p>
         <h1 className="page-title">Account settings</h1>
         <p>We couldn't load your profile. Please try again later.</p>
         <Link className="button button-dark" href="/account">
@@ -44,8 +44,8 @@ export default async function AccountSettingsPage() {
 
   if (!profile) {
     return (
-      <section className="page-message auth-page">
-        <p className="eyebrow">YOUR HILIG ACCOUNT</p>
+      <section className="account-settings-page page-message auth-page">
+        <p className="eyebrow">YOUR SPACE • YOUR DETAILS</p>
         <h1 className="page-title">Profile unavailable</h1>
         <p>
           Your profile record could not be found. Please contact support
@@ -59,8 +59,8 @@ export default async function AccountSettingsPage() {
   }
 
   return (
-    <section className="page-message auth-page">
-      <p className="eyebrow">YOUR HILIG ACCOUNT</p>
+    <section className="account-settings-page page-message auth-page">
+      <p className="eyebrow">YOUR SPACE • YOUR DETAILS</p>
       <h1 className="page-title">Account settings</h1>
       <p>Update your personal information below.</p>
 
