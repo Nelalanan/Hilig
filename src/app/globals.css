@@ -2934,7 +2934,7 @@ footer .footer-brand { width:max-content; }
 /* Final header/footer logo and footer alignment correction */
 .site-header .brand {
   flex: 0 0 auto;
-  width: 82px;
+  width: 100px;
   height: 52px;
   box-sizing: border-box;
   justify-content: center;
